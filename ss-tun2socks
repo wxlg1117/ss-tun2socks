@@ -65,6 +65,7 @@ function chnip_update() {
 function ipts_update() {
     iptables -t mangle -F OUTPUT
     iptables -t mangle -F PREROUTING
+    iptables -t mangle -F TUN2SOCKS &> /dev/null
     iptables -t mangle -X TUN2SOCKS &> /dev/null
     iptables -t nat -F PREROUTING
     iptables -t nat -F POSTROUTING
@@ -93,6 +94,7 @@ function ipts_update() {
 function ipts_origin() {
     iptables -t mangle -F OUTPUT
     iptables -t mangle -F PREROUTING
+    iptables -t mangle -F TUN2SOCKS &> /dev/null
     iptables -t mangle -X TUN2SOCKS &> /dev/null
     iptables -t nat -F PREROUTING
     iptables -t nat -F POSTROUTING
@@ -182,9 +184,9 @@ function start() {
 }
 
 function stop() {
-    pgrep tun2socks | xargs kill &> /dev/null
-    pgrep chinadns | xargs kill -9 &> /dev/null
-    pgrep dnsforwarder | xargs kill -9 &> /dev/null
+    pgrep '^tun2socks$' | xargs kill &> /dev/null
+    pgrep '^chinadns$' | xargs kill -9 &> /dev/null
+    pgrep '^dnsforwarder$' | xargs kill -9 &> /dev/null
 
     ipts_origin
     ipset -X chnip &> /dev/null
@@ -194,19 +196,19 @@ function stop() {
 }
 
 function status() {
-    if [ $(pgrep -c tun2socks) -ge 1 ]; then
+    if [ $(pgrep -c '^tun2socks$') -ge 1 ]; then
         echo -e "\e[37mtun2socks\e[0m\t[\e[1;32mrunning\e[0m]"
     else
         echo -e "\e[37mtun2socks\e[0m\t[\e[1;35mstopped\e[0m]"
     fi
 
-    if [ $(pgrep -c chinadns) -ge 1 ]; then
+    if [ $(pgrep -c '^chinadns$') -ge 1 ]; then
         echo -e "\e[37mchinadns\e[0m\t[\e[1;32mrunning\e[0m]"
     else
         echo -e "\e[37mchinadns\e[0m\t[\e[1;35mstopped\e[0m]"
     fi
 
-    if [ $(pgrep -c dnsforwarder) -ge 1 ]; then
+    if [ $(pgrep -c '^dnsforwarder$') -ge 1 ]; then
         echo -e "\e[37mdnsforwarder\e[0m\t[\e[1;32mrunning\e[0m]"
     else
         echo -e "\e[37mdnsforwarder\e[0m\t[\e[1;35mstopped\e[0m]"
