@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#main_cfg='ss-tun2socks.conf'
 main_cfg='/etc/ss-tun2socks.conf'
 
 if [ ! -e "${main_cfg}" ]; then
@@ -46,6 +47,7 @@ function dnsfwd_flush() {
 }
 
 function chnip_update() {
+    #chnip_url="http://f.ip.cn/rt/chnroutes.txt"
     chnip_url="https://github.com/17mon/china_ip_list/raw/master/china_ip_list.txt"
     echo -n > ${ipset_save_file}
     curl -4sSkL ${chnip_url} | egrep -v '^\s*$|^\s*#' | xargs -n1 echo add chnip >> ${ipset_save_file}
@@ -78,7 +80,7 @@ function ipts_update() {
     iptables -t mangle -A TUN2SOCKS -d 192.168/16 -j RETURN
     iptables -t mangle -A TUN2SOCKS -d 224/4 -j RETURN
     iptables -t mangle -A TUN2SOCKS -d 240/4 -j RETURN
-    iptables -t mangle -A TUN2SOCKS -d ${tun2socks_remote} -j RETURN
+    iptables -t mangle -A TUN2SOCKS -d ${socks5_remote} -j RETURN
     iptables -t mangle -A TUN2SOCKS -m set --match-set chnip dst -j RETURN
     iptables -t mangle -A TUN2SOCKS -j MARK --set-mark ${iptables_mark}
 
@@ -142,24 +144,16 @@ function current_ip() {
 }
 
 function start() {
+    dns_origin
+
     if [ ! -e ${chinadns_chnroute} ]; then
         echo -e "\e[37m${chinadns_chnroute}\e[0m  [\e[1;35mnot_exist\e[0m]"
         exit 1
     fi
 
-    socks5_port=$(echo $tun2socks_socks5 | awk -F: '{print $2}')
-    if [ $(netstat -lnpt | grep :$socks5_port | wc -l) -eq 0 ]; then
-        echo -e "\e[37m${tun2socks_socks5}/tcp\e[0m  [\e[1;35mno_listening\e[0m]"
-        exit 1
-    fi
-    if [ $(netstat -lnpu | grep :$socks5_port | wc -l) -eq 0 ]; then
-        echo -e "\e[37m${tun2socks_socks5}/udp\e[0m  [\e[1;35mno_listening\e[0m]"
-        exit 1
-    fi
+    eval "${socks5_runcmd}"
 
-    dns_origin
-
-    nohup tun2socks -tun-device $tun2socks_tundev -tun-address $tun2socks_address -tun-mask $tun2socks_netmask -tun-gw $tun2socks_gateway -local-socks-addr $tun2socks_socks5 -public-only < /dev/null &>> $tun2socks_log &
+    nohup tun2socks -tun-device $tun2socks_tundev -tun-address $tun2socks_address -tun-mask $tun2socks_netmask -tun-gw $tun2socks_gateway -local-socks-addr $socks5_listen -public-only < /dev/null &>> $tun2socks_log &
 
     chinadns_params="-b ${chinadns_addr} -p ${chinadns_port} -s ${chinadns_upstream} -c ${chinadns_chnroute}"
     if [ "${chinadns_mutation}" = 'true' ]; then chinadns_params+=" -m"; fi
@@ -183,6 +177,8 @@ function start() {
 }
 
 function stop() {
+    port=$(echo $socks5_listen | awk -F: '{print $2}')
+    ss -lnptu | grep :$port | grep -o 'pid=[0-9]+' | awk -F= '{print $2}' | sort -n | uniq | xargs kill -9 &> /dev/null
     pgrep '^tun2socks$' | xargs kill &> /dev/null
     pgrep '^chinadns$' | xargs kill -9 &> /dev/null
     pgrep '^dnsforwarder$' | xargs kill -9 &> /dev/null
@@ -195,6 +191,20 @@ function stop() {
 }
 
 function status() {
+    port=$(echo $socks5_listen | awk -F: '{print $2}')
+
+    if [ $(ss -lnpt | grep :$port | wc -l) -ne 0 ]; then
+        echo -e "\e[37msocks5/tcp\e[0m\t[\e[1;32mrunning\e[0m]"
+    else
+        echo -e "\e[37msocks5/tcp\e[0m\t[\e[1;35mstopped\e[0m]"
+    fi
+
+    if [ $(ss -lnpu | grep :$port | wc -l) -ne 0 ]; then
+        echo -e "\e[37msocks5/udp\e[0m\t[\e[1;32mrunning\e[0m]"
+    else
+        echo -e "\e[37msocks5/udp\e[0m\t[\e[1;35mstopped\e[0m]"
+    fi
+
     if [ $(pgrep -c '^tun2socks$') -ge 1 ]; then
         echo -e "\e[37mtun2socks\e[0m\t[\e[1;32mrunning\e[0m]"
     else
