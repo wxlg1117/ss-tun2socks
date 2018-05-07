@@ -1,5 +1,6 @@
-# tun2socks 全局透明代理脚本(Processing)
-运行此脚本需要的依赖（环境）：
+# tun2socks 透明代理脚本(Processing)
+## 脚本依赖
+运行此脚本需要的依赖：
 - iproute2 工具
 - iptables + ipset 工具
 - curl（获取大陆地址段列表）
@@ -17,7 +18,7 @@
 
 > 如果你使用的 CPU 架构不在上述列表中，请发 Issues！
 
-## 原理简述
+## 相关说明
 在 Linux 中（尤其是命令行界面）进行 SS/SSR 全局代理远不如 Windows/MacOS/Android/iOS 上方便，因为这些系统中的 SS/SSR 基本都有图形界面，启用它们后，无需用户手动干预，它们会自动的使用平台适应的全局代理模式（比如 Android 上普遍使用的 VPN 模式）。
 
 这里以 shadowsocks-libev 作为说明例子（此脚本不限定 SS/SSR 版本），安装后，可以看到这几个程序：
@@ -139,4 +140,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 *缺点*：暂时没发现哈，`ss-tun2socks` 完美的克服了 [ss-tproxy](https://github.com/zfl9/ss-tproxy.git) 的所有缺点，所以强烈推荐使用此模式。
 
 ## 脚本用法
+// TODO
+
+## 相关参考
 // TODO
