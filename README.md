@@ -2,7 +2,8 @@
 ## 脚本依赖
 - iproute2 工具
 - iptables + ipset 工具
-- curl（获取大陆地址段列表）
+- curl 用于获取大陆地址段列表
+- haveged 解决系统熵过低的问题（可选，但建议）
 - 本地 socks5 代理（SS、SSR），需支持 UDP Relay
 - [chinadns](https://github.com/shadowsocks/ChinaDNS)，自带 `x64` 可执行文件
 - [dnsforwarder](https://github.com/holmium/dnsforwarder)，自带 `x64` 可执行文件
