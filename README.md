@@ -60,31 +60,31 @@ $ curl -4sSkL -x socks5://127.0.0.1:1080 https://www.google.com
 不出意外的话，该命令会输出 Google 首页的 HTML 源码（如上所示），这意味这你已成功翻墙。
 但是，对于那些不支持 socks5 代理的程序该怎么办呢？有很多种方法，这里列出几种常用的方式。
 
-**proxychains-ng**，拦截动态库的同名库函数（libc），实现代理。
+**proxychains-ng**，拦截动态库的同名库函数（libc），实现代理。<br>
 利用 `LD_PRELOAD` 环境变量，程序会首先加载该环境变量指定的共享库（不管需不需要），通过此变量加载的库函数比后面加载的同名库函数的优先级更高。proxychains 正是利用了这点，它重写了 libc 库中与 socket 相关的函数，如 connect、close、sendto，然后将它们编译为 `libproxychains4.so` 共享库（该共享库会根据 /etc/proxychains.conf 配置文件使用指定的代理），这样，我们在执行 `proxychains [command]` 时，proxychains 直接调用 `exec [command]`，同时传递两个环境变量（`LD_PRELOAD`、`PROXYCHAINS_CONF_FILE`），前者指定 libproxychains4.so 文件，后者指定 proxychains.conf 配置文件。这样 [command] 就可以无障碍的使用预设的 socks5 代理了。
 
-安装，以 ArchLinux 为例：`pacman -S proxychains-ng`
-配置 `/etc/proxychains.conf` 文件，将尾部的 socks4 替换为 `socks5 127.0.0.1 1080`
-使用很简单，我们只需要在正常命令前面加上 `proxychains`，如 `proxychains curl https://www.google.com -4sSkL`
-如果不想每次都输入 proxychains，可以直接执行：`exec proxychains [shell]`，这样就可以直接使用 socks5 代理了。
+安装，以 ArchLinux 为例：`pacman -S proxychains-ng`<br>
+配置 `/etc/proxychains.conf` 文件，将尾部的 socks4 替换为 `socks5 127.0.0.1 1080`<br>
+使用很简单，我们只需要在正常命令前面加上 `proxychains`，如 `proxychains curl https://www.google.com -4sSkL`<br>
+如果不想每次都输入 proxychains，可以直接执行：`exec proxychains [shell]`，这样就可以直接使用 socks5 代理了。<br>
 
-*优点*：安装和使用都很简单，兼容性好。
-*缺点*：只支持 TCP，不支持 UDP，无法在网关上使用（无法代理内网的数据）。
+*优点*：安装和使用都很简单，兼容性好。<br>
+*缺点*：只支持 TCP，不支持 UDP，无法在网关上使用（无法代理内网的数据）。<br>
 
-**privoxy**，作为 socks5 代理的前端，提供 http/https 代理。
+**privoxy**，作为 socks5 代理的前端，提供 http/https 代理。<br>
 配置 privoxy，启用 http/https -> socks5 转发功能，然后运行 privoxy，默认监听 8118/tcp 端口，最后，我们只需要设置两个环境变量就可以了，`http_proxy`、`https_proxy`，它们的值均为 `http://127.0.0.1:8118`。一般的应用程序都会使用这两个环境变量，然后走 privoxy 的 http/https(connect) 代理，privoxy 在内部将它们转换为 socks5 协议，然后与 ss-local 通信。
 
-安装，以 ArchLinux 为例：`pacman -S privoxy`
-配置 `/etc/privoxy/config`，添加 `forward-socks5 / 127.0.0.1:1080 .`
-运行 privoxy，`systemctl start privoxy.service`
-然后设置 proxy 环境变量：`export http_proxy=http://127.0.0.1:8118`、`export https_proxy=http://127.0.0.1:8118`
-现在，随便运行一个程序，以 curl 为例，`curl -4sSkL https://www.google.com`，不出意外的话，是可以正常翻墙的。
+安装，以 ArchLinux 为例：`pacman -S privoxy`<br>
+配置 `/etc/privoxy/config`，添加 `forward-socks5 / 127.0.0.1:1080 .`<br>
+运行 privoxy，`systemctl start privoxy.service`<br>
+然后设置 proxy 环境变量：`export http_proxy=http://127.0.0.1:8118`、`export https_proxy=http://127.0.0.1:8118`<br>
+现在，随便运行一个程序，以 curl 为例，`curl -4sSkL https://www.google.com`，不出意外的话，是可以正常翻墙的。<br>
 
-*优点*：安装和使用都很简单，可以在网关上使用（可以代理内网的 http/https，但需要配置内网主机）。
-*缺点*：只能代理 http 和 https，并且有的程序根本不吃 http_proxy、https_proxy 这套，不走它的代理。
+*优点*：安装和使用都很简单，可以在网关上使用（可以代理内网的 http/https，但需要配置内网主机）。<br>
+*缺点*：只能代理 http 和 https，并且有的程序根本不吃 http_proxy、https_proxy 这套，不走它的代理。<br>
 
-**NAT 透明代理**
+**NAT 透明代理**<br>
 // TODO
 
-**VPN 透明代理**
+**VPN 透明代理**<br>
 // TODO
