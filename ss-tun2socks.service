@@ -1,0 +1,16 @@
+[Unit]
+Description=ss-tun2socks
+ConditionFileIsExecutable=/usr/local/bin/ss-tun2socks
+ConditionFileNotEmpty=/etc/ss-tun2socks.conf
+Requires=network-online.target haveged.service
+After=network-online.target haveged.service
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/ss-tun2socks start
+ExecStop=/usr/local/bin/ss-tun2socks stop
+ExecReload=/usr/local/bin/ss-tun2socks restart
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
