@@ -1,22 +1,12 @@
-# tun2socks 透明代理脚本(Processing)
+# tun2socks 透明代理
 ## 脚本依赖
-运行此脚本需要的依赖：
 - iproute2 工具
 - iptables + ipset 工具
 - curl（获取大陆地址段列表）
 - 本地 socks5 代理（SS、SSR），需支持 UDP Relay
-- ChinaDNS https://github.com/shadowsocks/ChinaDNS
-- dnsforwarder https://github.com/holmium/dnsforwarder
-
-附带的 `tun2socks` 可执行文件支持的 CPU 架构有：
-- `linux/386`：x86 32位处理器
-- `linux/amd64`：x86 64位处理器
-- `linux/arm`：arm 32位处理器
-- `linux/arm64`：arm 64位处理器
-- `linux/mips`：mips 32位处理器
-- `linux/mips64`：mips 64位处理器
-
-> 如果你使用的 CPU 架构不在上述列表中，请发 Issues！
+- [chinadns](https://github.com/shadowsocks/ChinaDNS)，自带 `x64` 可执行文件
+- [dnsforwarder](https://github.com/holmium/dnsforwarder)，自带 `x64` 可执行文件
+- [gotun2socks](https://github.com/yinghuocho/gotun2socks)，自带 `x86`、`x64`、`arm`、`arm64`、`mips`、`mips64` 可执行文件
 
 ## 相关说明
 在 Linux 中（尤其是命令行界面）进行 SS/SSR 全局代理远不如 Windows/MacOS/Android/iOS 上方便，因为这些系统中的 SS/SSR 基本都有图形界面，启用它们后，无需用户手动干预，它们会自动的使用平台适应的全局代理模式（比如 Android 上普遍使用的 VPN 模式）。
