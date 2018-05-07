@@ -103,7 +103,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 那么本机的 UDP 该怎么办呢？没办法了，目前的方法是使用 ss-tunnel，ss-tunnel 是 libev 版自带的端口转发工具，只需将 ss-tunnel 运行在 53/udp 端口，目的地址设为 8.8.8.8:53/udp，然后修改 /etc/resolv.conf 文件，将 dns 指向 127.0.0.1:53/udp（即 ss-tunnel），就可以使用墙外的 8.8.8.8 DNS 进行无污染解析了。
 
 *优点*：能够透明代理本机的 TCP 流量、来自内网的 TCP/UDP 流量（工作在网关）。<br>
-*缺点*：不能代理本机的 UDP 流量、ss-redir 不是所有版本都有的，libev 版才有、某些 Linux 不支持 TPROXY，如部分无线路由。<br>
+*缺点*：不能代理本机的 UDP 流量、ss-redir 在 libev 版本中才有、某些 Linux 不支持 TPROXY，如部分无线路由。<br>
 
 **VPN 透明代理**<br>
 // TODO
