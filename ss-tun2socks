@@ -178,7 +178,7 @@ function start() {
 
 function stop() {
     port=$(echo $socks5_listen | awk -F: '{print $2}')
-    ss -lnptu | grep :$port | grep -o 'pid=[0-9]+' | awk -F= '{print $2}' | sort -n | uniq | xargs kill -9 &> /dev/null
+    ss -lnptu | grep :$port | grep -Eo 'pid=[0-9]+' | awk -F= '{print $2}' | sort -n | uniq | xargs kill -9 &> /dev/null
     pgrep '^tun2socks$' | xargs kill &> /dev/null
     pgrep '^chinadns$' | xargs kill -9 &> /dev/null
     pgrep '^dnsforwarder$' | xargs kill -9 &> /dev/null
