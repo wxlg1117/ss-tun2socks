@@ -1,7 +1,7 @@
 [Unit]
 Description=ss-tun2socks
 ConditionFileIsExecutable=/usr/local/bin/ss-tun2socks
-ConditionFileNotEmpty=/etc/ss-tun2socks.conf
+ConditionFileNotEmpty=/etc/tun2socks/ss-tun2socks.conf
 Requires=network-online.target haveged.service
 After=network-online.target haveged.service
 
