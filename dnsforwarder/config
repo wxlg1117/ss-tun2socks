@@ -1,0 +1,24 @@
+#### 日志相关 ####
+LogOn true                      # 启用日志记录
+LogFileThresholdLength 5120000  # 日志大小临界值
+LogFileFolder /var/log/         # 日志文件所在的文件夹
+
+#### 监听地址 ####
+UDPLocal 0.0.0.0:53             # 可以有多个，使用逗号隔开，默认端口53
+
+#### 上游dns ####
+UDPGroup 127.0.0.1:65353 * on   # chinadns 作为上游 dns 服务器
+BlockNegativeResponse true      # 过滤上游 dns 未成功的响应
+
+#### hosts文件 ####
+Hosts file:///etc/hosts         # 本机 hosts 文件路径
+HostsUpdateInterval -1          # 运行期间不重载 hosts
+
+#### dns缓存 ####
+UseCache true                   # 启用缓存（文件缓存）
+MemoryCache false               # 不使用内存缓存
+CacheSize 30720000              # 缓存大小，不能小于 102400
+IgnoreTTL true                  # 忽略 TTL 值
+CacheControl iok.la nocache     # 不缓存以 'iok.la' 结尾的域名
+ReloadCache true                # 启动时加载已有的文件缓存
+OverwriteCache true             # 当已有的文件缓存载入失败时，覆盖原文件
