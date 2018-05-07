@@ -84,7 +84,26 @@ $ curl -4sSkL -x socks5://127.0.0.1:1080 https://www.google.com
 *缺点*：只能代理 http 和 https，并且有的程序根本不吃 http_proxy、https_proxy 这套，不走它的代理。<br>
 
 **NAT 透明代理**<br>
-// TODO
+到目前为止，我们仍未找到一种能够真正全局代理的方法，难道真的没办法了吗？办法是有的，还记得开头说的 `ss-redir`、`ss-tunnel` 吗？它们就是专为 Linux 编写的全局代理工具，这两个工具目前只存在于 libev 版本，我们先来介绍 ss-redir。
+
+ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的读者对 REDIRECT 可能不陌生，很多全局代理的工具都需要使用 REDIRECT（重定向）。REDIRECT 实际上就是 DNAT（目的地址转换），只不过 REDIRECT 中的目的 IP 是本机，于是起了个形象的名字 - 重定向。DNAT 做的工作很简单，它就是修改数据包的目的 IP 和目的 Port，但是，DNAT 在修改之前，会先在内存中保存数据包的原目的 IP 和原目的 Port（称为连接记录项），以供程序查询。
+
+我们先运行 ss-redir（和 ss-local 的运行方式类似），默认监听在 1080/tcp、1080/udp 端口。然后配置 iptables 规则，REDIRECT 需要被代理的数据到 1080 端口（先考虑 TCP），ss-redir 收到 TCP 数据包后，先调用 netfilter 提供的 API 获取该数据包的原目的 IP 和原目的 Port。拿到了原目的 IP 和原目的 Port 后，接下来 ss-redir 和 ss-local 的工作方式就差不多了，与 ss-redir 进行通信，完成代理。
+
+现在 TCP 透明代理是 OK 了，那么 UDP 呢？为啥不直接像 TCP 那样直接 REDIRECT 过去呢？最开始我也是这么想当然的，直接 REDIRECT 到 1080 端口。因为我 DNS 是使用 ss-tunnel 进行解析的，所以也没发现啥不对劲的地方，毕竟我很少使用需要 UDP 翻墙。后来，经读者提醒我才知道，这么做是不对的，这根本无法透明代理 UDP 数据。为什么呢？因为 UDP 在做了 DNAT 后，程序是无法根据 netfilter API 获取原本的目的 IP 和目的 Port 的（有人说是因为 UDP 是无状态的协议，我也不是很懂，现在只需要知道无法像 TCP 那样获取就够了）。
+
+那要怎么搞？利用 Linux 2.6.28 加入的 TPROXY 内核模块。TPROXY 是一种全新的透明代理模式，它与 REDIRECT 有本质的不同，TPROXY 不会修改数据包的目的地址（有人说会修改目的端口，我暂时也无法考究），因为不修改数据包，所以这个问题就不存在了。TPROXY 实现的透明代理有以下特点：
+- 不对 IP 报文做改动（不做 DNAT）；
+- 应用层可用非本机 IP 与其它主机建立 TCP/UDP 连接；
+- Kernel 通过 iptables-tproxy 和策略路由将非本机流量送到 socket 层；
+- 仍需要通过其它技术拦截做代理的流量到代理服务器（WCCP 或 PBR 策略路由）。
+
+不过，目前 TPROXY 只能用在 iptables 的 PREROUTING 链中（mangle 表），因此只能透明代理来自内网中的 TCP、UDP 数据包，对本机的 TCP、UDP 数据包不起作用。注意，TPROXY 能够代理 TCP、UDP 流量，但是在 ss-redir 中，代理 TCP 要用 REDIRECT，代理 UDP 要用 TPROXY。理由很简单，如果全都使用 TPROXY，那么本机的数据包就无法代理了。这种混合的透明代理方式很常见，比如 redsocks 中就是采用的这种组合。
+
+那么本机的 UDP 该怎么办呢？没办法了，目前的方法是使用 ss-tunnel，ss-tunnel 是 libev 版自带的端口转发工具，只需将 ss-tunnel 运行在 53/udp 端口，目的地址设为 8.8.8.8:53/udp，然后修改 /etc/resolv.conf 文件，将 dns 指向 127.0.0.1:53/udp（即 ss-tunnel），就可以使用墙外的 8.8.8.8 DNS 进行无污染解析了。
+
+*优点*：能够透明代理本机的 TCP 流量、来自内网的 TCP/UDP 流量（工作在网关）。<br>
+*缺点*：不能代理本机的 UDP 流量、ss-redir 不是所有版本都有的，libev 版才有、某些 Linux 不支持 TPROXY，如部分无线路由。<br>
 
 **VPN 透明代理**<br>
 // TODO
