@@ -178,3 +178,4 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 - [yinghuocho/gotun2socks](https://github.com/yinghuocho/gotun2socks)
 - [shadowsocks/ChinaDNS](https://github.com/shadowsocks/ChinaDNS)
 - [holmium/dnsforwarder](https://github.com/holmium/dnsforwarder)
+- 感谢以上开发者的无私贡献，让我们能够畅游互联网！
