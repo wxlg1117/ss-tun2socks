@@ -147,7 +147,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 - `vim /etc/tun2socks/ss-tun2socks.conf`，修改开头的 `socks5 配置`。
 - `socks5_listen="127.0.0.1:1080"`：socks5 监听地址，一般为 1080 端口。
 - `socks5_remote="node.proxy.net"`：SS/SSR 服务器的 Hostname/IP，注意修改。
-- `socks5_runcmd="nohup ss-local -c /etc/ss-local.json -v < /dev/null &>> /var/log/ss-local.log &"`：
+- `socks5_runcmd="nohup ss-local -c /etc/ss-local.json -v < /dev/null &>> /var/log/ss-local.log &"`：<br>
 启动 SS/SSR 的命令，此命令必须能够后台运行。除了使用 nohup 外，还可以使用 `service [service-name] start`、`systemctl start [service-name]` 等方式，只要不占用前台就行。
 
 // TODO
