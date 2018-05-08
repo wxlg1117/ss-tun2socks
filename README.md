@@ -174,4 +174,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 - `ss-tun2socks update_chnip`：更新大陆地址段列表（ipset、chinadns）
 
 ## 相关参考
-// TODO
+- [ambrop72/badvpn](https://github.com/ambrop72/badvpn)
+- [yinghuocho/gotun2socks](https://github.com/yinghuocho/gotun2socks)
+- [shadowsocks/ChinaDNS](https://github.com/shadowsocks/ChinaDNS)
+- [holmium/dnsforwarder](https://github.com/holmium/dnsforwarder)
