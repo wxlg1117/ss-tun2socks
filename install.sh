@@ -34,7 +34,7 @@ echo -n "edit /etc/tun2socks/ss-tun2socks.conf? [y/n] "
 read input
 if [ "$input" = "y" -o "$input" = "Y" ]; then
     vim /etc/tun2socks/ss-tun2socks.conf
-    echo -n "start ss-tun2socks service? [y/n] "
+    echo -n "start ss-tun2socks service now? [y/n] "
     read input
     if [ "$input" = "y" -o "$input" = "Y" ]; then
         /usr/local/bin/ss-tun2socks start
