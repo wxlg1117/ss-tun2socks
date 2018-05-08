@@ -151,7 +151,17 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 启动 SS/SSR 的命令，此命令必须能够后台运行（即：不能占用前台）。<br>
 如 `service [service-name] start`、`systemctl start [service-name]` 等。
 
-// TODO
+**自启**（Systemd）
+- `cp -af ss-tun2socks.service /etc/systemd/system/`
+- `systemctl daemon-reload`
+- `systemctl enable ss-tun2socks.service`
+
+**自启**（SysVinit）
+- `touch /etc/rc.d/rc.local`
+- `chmod +x /etc/rc.d/rc.local`
+- `echo "/usr/local/bin/ss-tun2socks start" >> /etc/rc.d/rc.local`
+
+> 配置 ss-tun2socks 开机自启后容易出现一个问题，那就是必须再次运行 `ss-tun2socks restart` 后才能正常代理（这之前查看运行状态，可能看不出任何问题，都是 running 状态），这是因为 ss-tun2socks 启动过早了，且 socks5_remote 为 Hostname，且没有将 socks5_remote 中的 Hostname 加入 /etc/hosts 文件而导致的。因为 ss-tun2socks 启动时，网络还没准备好，此时根本无法解析这个 Hostname。要避免这个问题，可以采取一个非常简单的方法，那就是将 Hostname 加入到 /etc/hosts 中，如 Hostname 为 node.proxy.net，对应的 IP 为 11.22.33.44，则只需执行 `echo "11.22.33.44 node.proxy.net" >> /etc/hosts`。不过得注意个问题，那就是假如这个 IP 变了，别忘了修改 /etc/hosts 文件哦。
 
 ## 相关参考
 // TODO
