@@ -143,6 +143,8 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 - `cp -af chinadns/chnroute.txt /etc/tun2socks/`
 - `cp -af dnsforwarder/dnsforwarder.conf /etc/tun2socks/`
 
+> 或者使用 `./install.sh` 安装这些文件，目前只支持 x64 平台（后续会添加其它平台的支持）。
+
 **配置**
 - `vim /etc/tun2socks/ss-tun2socks.conf`，修改开头的 `socks5 配置`。
 - `socks5_listen="127.0.0.1:1080"`：socks5 监听地址，一般为 1080 端口。
