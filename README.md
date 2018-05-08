@@ -126,9 +126,9 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 ## 脚本用法
 **获取**
 - `git clone https://github.com/zfl9/ss-tun2socks.git`
-- `cd ss-tun2socks/`
 
 **安装**
+- `cd ss-tun2socks/`
 - `cp -af ss-tun2socks /usr/local/bin`
 - `cp -af tun2socks/tun2socks.ARCH /usr/local/bin`（注意 ARCH）
 - `cp -af chinadns/chinadns /usr/local/bin`（仅适用于 x64）
