@@ -45,7 +45,7 @@ function dnsfwd_flush() {
         pgrep dnsforwarder | xargs kill -9 &> /dev/null
         rm -fr ~/.dnsforwarder/cache
         sleep 3
-        dnsforwarder -d &> /dev/null
+        dnsforwarder -f $dnsforwarder_config -q -d &> /dev/null
     fi
 }
 
