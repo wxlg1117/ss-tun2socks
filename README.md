@@ -125,23 +125,23 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 
 ## 脚本用法
 **获取**
-`git clone https://github.com/zfl9/ss-tun2socks.git`
-`cd ss-tun2socks/`
+- `git clone https://github.com/zfl9/ss-tun2socks.git`
+- `cd ss-tun2socks/`
 
 **安装**
-`cp -af ss-tun2socks /usr/local/bin`
-`cp -af tun2socks/tun2socks.ARCH /usr/local/bin`（注意 ARCH）
-`cp -af chinadns/chinadns /usr/local/bin`（仅适用于 x64）
-`cp -af dnsforwarder/dnsforwarder /usr/local/bin`（仅适用于 x64）
-`chmod 0755 /usr/local/bin/ss-tun2socks`
-`chmod 0755 /usr/local/bin/tun2socks`
-`chmod 0755 /usr/local/bin/chinadns`
-`chmod 0755 /usr/local/bin/dnsforwarder`
-`mkdir -p /etc/tun2socks/`
-`cp -af ss-tun2socks.conf /etc/tun2socks/`
-`cp -af ipset/chnroute.ipset /etc/tun2socks/`
-`cp -af chinadns/chnroute.txt /etc/tun2socks/`
-`cp -af dnsforwarder/dnsforwarder.conf /etc/tun2socks/`
+- `cp -af ss-tun2socks /usr/local/bin`
+- `cp -af tun2socks/tun2socks.ARCH /usr/local/bin`（注意 ARCH）
+- `cp -af chinadns/chinadns /usr/local/bin`（仅适用于 x64）
+- `cp -af dnsforwarder/dnsforwarder /usr/local/bin`（仅适用于 x64）
+- `chmod 0755 /usr/local/bin/ss-tun2socks`
+- `chmod 0755 /usr/local/bin/tun2socks`
+- `chmod 0755 /usr/local/bin/chinadns`
+- `chmod 0755 /usr/local/bin/dnsforwarder`
+- `mkdir -p /etc/tun2socks/`
+- `cp -af ss-tun2socks.conf /etc/tun2socks/`
+- `cp -af ipset/chnroute.ipset /etc/tun2socks/`
+- `cp -af chinadns/chnroute.txt /etc/tun2socks/`
+- `cp -af dnsforwarder/dnsforwarder.conf /etc/tun2socks/`
 
 // TODO
 
