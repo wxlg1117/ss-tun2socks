@@ -118,7 +118,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 
 于是我重新开始安装那个 tun2socks，嗯，一切都 OK，没有错误提示，但是，等我运行的时候，发现这货还有啥配置文件，打开 example 文件一看，吓我一跳，几百行，我瞬间对它兴趣全无，就做个干净的 tun2socks 多好啊。于是，我开始安装第二个 tun2socks（gotun2socks），这个项目就比较干净了，就是个纯粹的 tun2socks 实现，没有任何多余的功能（不知道为啥，我就喜欢这种短小精悍的程序）。
 
-废话有点多啊，见谅见谅。好了回归正题，为了不让读者因编译 gotun2socks 而感到困扰，我提前编译好了几种 CPU 架构下的 tun2socks 可执行程序。你只需要 clone 本项目就可以获取了，如果需要其它架构下的 tun2socks，可以联系我，毕竟使用 go 交叉编译也很方便，不需要像 gcc 那样，各种工具链。当然，你也可以直接 clone [gotun2socks](https://github.com/yinghuocho/gotun2socks)，然后编译。差点忘了，非常感谢 gotun2socks 作者，提供了一个好用的 tun2socks 实现！
+废话有点多啊，见谅见谅。好了回归正题，为了不让读者因编译 gotun2socks 而感到困扰，我提前编译好了几种 CPU 架构下的 tun2socks 可执行程序。你只需要 clone 本项目就可以获取了，如果需要其它架构下的 tun2socks，可以联系我，毕竟使用 go 交叉编译也很方便，不需要像 gcc 那样，各种工具链。当然，你也可以直接 clone [gotun2socks](https://github.com/yinghuocho/gotun2socks)，然后编译（感谢 [@yinghuocho](https://github.com/yinghuocho)，提供了一个好用的 tun2socks）。
 
 *优点*：完美支持 tcp/udp 透明代理，无论来自本机还是来自内网，无需 libev 版、无需 TPROXY 模块。<br>
 *缺点*：暂时没发现哈，`ss-tun2socks` 完美的克服了 [ss-tproxy](https://github.com/zfl9/ss-tproxy.git) 的所有缺点，所以强烈推荐使用此模式。
