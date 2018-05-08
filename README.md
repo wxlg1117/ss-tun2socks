@@ -26,14 +26,7 @@ $ /bin/ss -lnptu | grep ss-local
 udp    UNCONN   0        0                 0.0.0.0:1080          0.0.0.0:*       users:(("ss-local",pid=2060,fd=6))
 tcp    LISTEN   0        128               0.0.0.0:1080          0.0.0.0:*       users:(("ss-local",pid=2060,fd=5))
 ```
-分别是：`0.0.0.0:1080/tcp`、`0.0.0.0:1080/udp`。很明显，这是我们要连接的代理地址，看得出，它支持 TCP 和 UDP 代理。那么它们是什么代理协议呢？答案是 socks5。也就是说，我们需要使用 socks5 协议与 ss-local 进行通信，从而完成 FQ。
-
-为了更好的陈述，这里先理清楚 `本机进程` 与 `ss-local` 之间的关系（角色）：
-- `ss-local`：角色，socks5 服务器。
-- `本机进程`：角色，socks5 客户端。
-- `通信协议`：当然是 socks5 协议了。
-
-因此，在 Linux 中，一个程序如果想要通过 ss-local 翻墙，首先它得使用 socks5 协议与 ss-local 交谈。比较可惜的是，大部分程序都没有直接支持 socks5 代理协议。这里使用 curl 工具演示，如何使用 socks5 协议，与 ss-local 交谈，从而翻墙。
+分别是：`0.0.0.0:1080/tcp`、`0.0.0.0:1080/udp`。很明显，这是我们要连接的代理地址，看得出，它支持 TCP 和 UDP 代理。那么它们是什么代理协议呢？答案是 socks5。也就是说，我们需要使用 socks5 协议与 ss-local 进行通信，从而完成 FQ。比较可惜的是，大部分程序都没有直接支持 socks5 代理协议。这里使用 curl 工具演示如何使用 socks5 代理：
 ```bash
 $ curl -4sSkL -x socks5://127.0.0.1:1080 https://www.google.com
 <!doctype html><html itemscope="" itemtype="http://schema.org/WebPage" lang="en"><head><meta content="Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for." name="description"><meta content="noodp" name="robots"><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"><meta content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"><title>Google</title><script nonce="+sL44P1JLi/ac6I3cdxWSQ==">(function(){window.google={kEI:'3dPvWu2iOMHM0gSI06GADQ',kEXPI:'0,1353746,58,472,639,846,131,887,440,678,215,103,183,224,80,336,168,203,6,2340647,258,169,32,329244,1344,12383,2349,2506,32692,15247,867,769,7,804,7,543,4562,5471,6381,853,2482,2,2,1624,5177,363,554,332,332,2102,113,1149,1052,2882,309,224,843,1375,57,73,130,5107,444,131,1119,2,579,352,26,285,64,311,886,465,402,367,59,2,4,685,612,394,4,141,638,1113,1149,154,730,1616,155,14,311,38,7,3,149,412,685,8,538,836,195,713,10,51,1232,19,545,454,281,2,840,284,219,910,34,482,21,25,10,428,145,128,57,69,17,132,134,125,14,754,25,155,38,101,41,344,75,9,149,248,127,27,155,35,701,317,339,200,115,6,2,598,180,68,31,54,12,69,245,178,2342031,3686354,1873,672,9,42,1,5997347,2800261,135,4,1572,549,332,445,1,2,1,1,77,1,1,509,391,207,1,1,1,1,1,371,9,304,1,8,1,2,1,1,539,2,1,1,1,2,2,18,22311370',authuser:0,kscs:'c9c918f0_3dPvWu2iOMHM0gSI06GADQ',u:'c9c918f0',kGL:'ZZ'};google.kHL='en';})();goog
