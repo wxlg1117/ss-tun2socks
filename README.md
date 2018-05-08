@@ -143,7 +143,7 @@ ss-redir 需要配合 iptables 的 REDIRECT 功能使用，熟悉 iptables 的�
 - `cp -af chinadns/chnroute.txt /etc/tun2socks/`
 - `cp -af dnsforwarder/dnsforwarder.conf /etc/tun2socks/`
 
-**配置**
+**配置**<br>
 `vim /etc/tun2socks/ss-tun2socks.conf`，修改开头的 `socks5 配置`。
 - `socks5_listen="127.0.0.1:1080"`：socks5 监听地址，一般为 1080 端口。
 - `socks5_remote="node.proxy.net"`：SS/SSR 服务器的 Hostname/IP，注意修改。
