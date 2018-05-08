@@ -52,8 +52,8 @@ function dnsfwd_flush() {
 function chnip_update() {
     #chnip_url="http://f.ip.cn/rt/chnroutes.txt"
     chnip_url="https://github.com/17mon/china_ip_list/raw/master/china_ip_list.txt"
-    echo -n > ${ipset_save_file}
-    curl -4sSkL ${chnip_url} | egrep -v '^\s*$|^\s*#' | xargs -n1 echo add chnroute >> ${ipset_save_file}
+    curl -4sSkL ${chnip_url} | egrep -v '^\s*$|^\s*#' > ${chinadns_chnroute}
+    cat ${chinadns_chnroute} | xargs -n1 echo add chnroute > ${ipset_save_file}
 
     ipset -L chnroute &> /dev/null
     if [ $? -ne 0 ]; then
